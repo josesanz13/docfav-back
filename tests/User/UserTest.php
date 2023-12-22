@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Test\Unit;
 
 use App\class\User;
+use App\Controllers\UserController;
+use App\useCase\UserUseCase;
 use PHPUnit\Framework\TestCase;
-
 
 class UserTest extends TestCase
 {
@@ -49,5 +50,31 @@ class UserTest extends TestCase
         $this->assertEquals(0, $user->getStatus());
         $this->assertEquals('2023-12-22', $user->getCreatedAt());
         $this->assertEquals(1, $user->getRoleId());
+    }
+
+    public function testUserUseCase() {
+        $userController = new UserController();
+        $userUseCase = new UserUseCase($userController);
+
+        $newUser = $userUseCase->createUser(
+            2,
+            'jane_doe',
+            'jane@example.com',
+            'new_password',
+            'Jane',
+            'Doe',
+            'active',
+            '2023-01-03',
+            1
+        );
+
+        $this->assertEquals(2, $newUser->getId());
+        $this->assertEquals('jane_doe', $newUser->getUsername());
+        $this->assertEquals('jane@example.com', $newUser->getEmail());
+        $this->assertEquals('Jane', $newUser->getFirstName());
+        $this->assertEquals('Doe', $newUser->getLastName());
+        $this->assertEquals('active', $newUser->getStatus());
+        $this->assertEquals('2023-01-03', $newUser->getCreatedAt());
+        $this->assertEquals(1, $newUser->getRoleId());
     }
 }
